@@ -40,7 +40,7 @@ def feed(update, context):
 
     if fullmsg == "/feed":
         update.message.reply_text(
-            'Send me the command with a IG username\n/feed [instagram username]\nPlease read /now')
+            '/feed [instagram username]\nPlease read /help')
     else:
         msg = fullmsg.replace("/feed ", "")
 
@@ -78,7 +78,7 @@ def feed(update, context):
 
     for zip_file in glob.glob("*.zip"):
         context.bot.send_document(chat_id=update.message.chat_id,
-                                  document=open(zip_file, 'rb'), action="upload_document")
+                                  document=open(zip_file, 'rb'))
 
     try:
         shutil.rmtree(query)
