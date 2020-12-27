@@ -18,23 +18,23 @@ import os
 import zipfile
 import pathlib
 
-bot_token = ""
+bot_token = "1290227041:AAHf-shTSNu-RieRT0T1qUnvCOXEnDeCcME"
 bot = Bot(token=bot_token)
 
 
 def start(update, context):
-    user = context.bot.get_chat_member(chat_id='-1001225141087', user_id=update.message.chat_id)
+    user = context.bot.get_chat_member(chat_id='@MBNChat', user_id=update.message.chat_id)
     status = user["status"]
     if(status == 'left'):
-        context.bot.send_message(chat_id=update.message.chat_id,text="To use to bot you need to be a member of @MBNUpdates in order to stay updated with the latest developments.")
+        context.bot.send_message(chat_id=update.message.chat_id,text="To use to bot you need to be a member of @MBNUpdates and @MBNChat in order to stay updated with the latest developments.")
         return
     else :
         context.bot.send_message(chat_id=update.message.chat_id,
-                                    text="Hello beta tester, you can early access @NandiyaLive's projects' new features through this. These features are not yet ready for production, so there will be some errors. If you are having any, please send a message to @MDNChat. Use /now command to see what are the features curruntly running on this bot and know how to use them. \nJoin @MBNUpdates for more info.", parse_mode=telegram.ParseMode.HTML)
+                                    text="Hello beta tester, you can early access @NandiyaLive's projects' new features through this.\n\nUse /now command to see what are the features curruntly running on this bot and know how to use them.\n\nJoin @MBNUpdates for more info.", parse_mode=telegram.ParseMode.HTML)
 
 
 def now(update, context):
-    update.message.reply_text('''<b>Curruntly running :</b>\nA feature for @xIGDLBot to bulk download posts from instagram as a zip file.\n<b>Usage :</b>\n/feed [username] - Download all posts from the username’s profile as a zip file.''', parse_mode=telegram.ParseMode.HTML)
+    update.message.reply_text('''These features are not yet ready for production, so there will be some errors. If you are having any, please send a message to @MDNChat.\n<b>Curruntly running :</b>\nA feature for @xIGDLBot to bulk download posts from instagram as a zip file.\n<b>Usage :</b>\n/feed [username] - Download all posts from the username’s profile as a zip file.''', parse_mode=telegram.ParseMode.HTML)
 
 
 def echo(update, context):
@@ -42,10 +42,10 @@ def echo(update, context):
 
 
 def feed(update, context):
-    user = context.bot.get_chat_member(chat_id='-1001225141087', user_id=update.message.chat_id)
+    user = context.bot.get_chat_member(chat_id='@MBNChat', user_id=update.message.chat_id)
     status = user["status"]
     if(status == 'left'):
-        context.bot.send_message(chat_id=update.message.chat_id,text="To use to bot you need to be a member of @MBNUpdates in order to stay updated with the latest developments.")
+        context.bot.send_message(chat_id=update.message.chat_id,text="To use to bot you need to be a member of @MBNUpdates and @MBNChat in order to stay updated with the latest developments.")
         return
     else :
         fullmsg = update.message.text
