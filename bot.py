@@ -23,10 +23,10 @@ bot = Bot(token=bot_token)
 
 
 def start(update, context):
-    user = context.bot.get_chat_member(chat_id='@MBNChat', user_id=update.message.chat_id)
+    user = bot.get_chat_member(chat_id='-1001225141087', user_id=update.message.chat_id)
     status = user["status"]
     if(status == 'left'):
-        context.bot.send_message(chat_id=update.message.chat_id,text="To use to bot you need to be a member of @MBNUpdates and @MBNChat in order to stay updated with the latest developments.")
+        context.bot.send_message(chat_id=update.message.chat_id,text="To use to bot you need to be a member of @MBNUpdates in order to stay updated with the latest developments.")
         return
     else :
         context.bot.send_message(chat_id=update.message.chat_id,
@@ -42,10 +42,10 @@ def echo(update, context):
 
 
 def feed(update, context):
-    user = context.bot.get_chat_member(chat_id='@MBNChat', user_id=update.message.chat_id)
+    user = context.bot.get_chat_member(chat_id='-1001225141087', user_id=update.message.chat_id)
     status = user["status"]
     if(status == 'left'):
-        context.bot.send_message(chat_id=update.message.chat_id,text="To use to bot you need to be a member of @MBNUpdates and @MBNChat in order to stay updated with the latest developments.")
+        context.bot.send_message(chat_id=update.message.chat_id,text="To use to bot you need to be a member of @MBNUpdates in order to stay updated with the latest developments.")
         return
     else :
         fullmsg = update.message.text
@@ -66,7 +66,7 @@ def feed(update, context):
         profile = Profile.from_username(L.context, query)
 
         media = profile.mediacount
-        update.message.reply_text("Cooking your request 👨‍🍳\nProfile : " + query + "\nMedia Count : " + str(media) +
+        downmsg = update.message.reply_text("Cooking your request 👨‍🍳\nProfile : " + query + "\nMedia Count : " + str(media) +
                                 "\nThis may take longer, take a nap I can handle this without you.")
 
         posts = profile.get_posts()
@@ -76,8 +76,8 @@ def feed(update, context):
             context.bot.send_message(chat_id=update.message.chat_id, text="<b>ERROR\n"+str(
                 e), parse_mode=telegram.ParseMode.HTML)
             return
+        archivemsg = context.bot.edit_message_text(text="Download Completed.\n🗄 Archiving files...", chat_id=update.message.chat_id, message_id=downmsg.message_id)
 
-        update.message.reply_text("Download Completed.\n🗄 Archiving files...")
 
         zf = zipfile.ZipFile(f"{query}.zip", "w")
         for dirname, subdirs, files in os.walk(query):
@@ -85,18 +85,24 @@ def feed(update, context):
             for filename in files:
                 zf.write(os.path.join(dirname, filename))
         zf.close()
-
-        update.message.reply_text("Uploading to Telegram...")
+        uploadmsg = context.bot.edit_message_text(text="Uploading to Telegram...", chat_id=update.message.chat_id, message_id=archivemsg.message_id)
 
         for zip_file in glob.glob("*.zip"):
             context.bot.send_document(chat_id=update.message.chat_id,
-                                    document=open(zip_file, 'rb'))
+                                    document=open(zip_file, 'rb'), caption="Thanks for using @xIGDLBot\nPlease /donate to keep this service alive!")
+        
+        context.bot.delete_message(chat_id=update.message.chat_id, message_id=uploadmsg.message_id)
 
         try:
             shutil.rmtree(query)
-            os.remove(f"{query}.zip")
+            os.remove(f"./{query}.zip")
         except Exception:
             pass
+
+
+def donate(update, context):
+    user = update.message.from_user
+    bot.send_message(chat_id=update.message.chat_id, text=f"Hey {user.first_name}! \nThanks for showing interest in my works\nPlease contact @NandiyaLive for more info. You can send any amount you wish to donate me.")
 
 
 def main():
@@ -107,6 +113,7 @@ def main():
     dp.add_handler(CommandHandler("start", start, run_async=True))
     dp.add_handler(CommandHandler("now", now, run_async=True))
     dp.add_handler(CommandHandler("feed", feed, run_async=True))
+    dp.add_handler(CommandHandler("donate", donate, run_async=True))
 
     dp.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
 
